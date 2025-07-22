@@ -137,6 +137,17 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+.place-card.inactive {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.place-card.inactive .place-info p {
+    color: #999;
+}
+
 /* Modal */
 .modal {
     display: none;

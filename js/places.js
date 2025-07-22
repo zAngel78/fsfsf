@@ -31,26 +31,35 @@ class Places {
             // Obtener estado de las plazas para la fecha seleccionada
             const response = await API.getPlazasDisponibles(date, date);
             console.log('Respuesta plazas:', response);
-            const plazasOcupadas = response.plazas ? 
-                response.plazas.filter(p => !p.activa).map(p => p.numero) : [];
+            
+            // Obtener todas las plazas para saber cuáles están activas/inactivas
+            const allPlazasResponse = await API.getPlazas();
+            const todasLasPlazas = allPlazasResponse.plazas || [];
+            
+            // Crear un mapa de plazas disponibles para búsqueda rápida
+            const plazasDisponiblesMap = new Map(
+                (response.plazas || []).map(p => [p.numero, p])
+            );
 
             this.placesGrid.innerHTML = '';
 
             // Mostrar siempre las 18 plazas
             for (let i = 1; i <= 18; i++) {
                 const numero = `P${i}`;
-                const isOcupada = plazasOcupadas.includes(numero);
+                const plazaInfo = todasLasPlazas.find(p => p.numero === numero);
+                const isDisponible = plazasDisponiblesMap.has(numero);
+                const isActiva = plazaInfo ? plazaInfo.activa : false;
 
                 const placeCard = document.createElement('div');
-                placeCard.className = `place-card ${isOcupada ? 'unavailable' : 'available'}`;
+                placeCard.className = `place-card ${!isActiva ? 'inactive' : (isDisponible ? 'available' : 'unavailable')}`;
                 placeCard.innerHTML = `
                     <h4>Plaza ${numero}</h4>
                     <div class="place-info">
-                        <p>Estado: ${isOcupada ? 'No disponible' : 'Disponible'}</p>
+                        <p>Estado: ${!isActiva ? 'Inactiva' : (isDisponible ? 'Disponible' : 'No disponible')}</p>
                     </div>
                 `;
 
-                if (!isOcupada) {
+                if (isActiva && isDisponible) {
                     placeCard.addEventListener('click', () => {
                         this.showPlaceDetails(numero, date);
                     });
