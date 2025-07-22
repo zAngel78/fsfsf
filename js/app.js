@@ -1,50 +1,59 @@
 class App {
     constructor() {
-        this.views = {
-            calendar: document.getElementById('calendar-view'),
-            reservation: document.getElementById('reservation-view')
-        };
-        
-        this.navButtons = document.querySelectorAll('.nav-btn');
-        
-        this.setupNavigation();
+        this.mainView = document.getElementById('main-view');
+        this.reservationView = document.getElementById('reservation-form');
+        this.adminView = document.getElementById('admin-view');
+        this.currentView = null;
+
+        // Manejar navegación inicial
+        this.handleNavigation();
+
+        // Escuchar cambios en el hash
+        window.addEventListener('hashchange', () => this.handleNavigation());
     }
-    
-    setupNavigation() {
-        this.navButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const view = button.dataset.view;
-                this.showView(view);
-            });
+
+    handleNavigation() {
+        const hash = window.location.hash || '#main-view';
+        console.log('Navegando a:', hash);
+
+        // Ocultar todas las vistas
+        document.querySelectorAll('.view').forEach(view => {
+            view.classList.remove('active');
         });
-        
-        // Manejar navegación por hash
-        window.addEventListener('hashchange', () => this.handleHashChange());
-        this.handleHashChange();
-    }
-    
-    showView(viewName) {
-        // Actualizar botones
-        this.navButtons.forEach(button => {
-            button.classList.toggle('active', button.dataset.view === viewName);
-        });
-        
-        // Actualizar vistas
-        Object.entries(this.views).forEach(([name, element]) => {
-            element.classList.toggle('active', name === viewName);
-        });
-        
-        // Actualizar hash
-        window.location.hash = viewName;
-    }
-    
-    handleHashChange() {
-        const hash = window.location.hash.slice(1) || 'calendar';
-        this.showView(hash);
+
+        // Mostrar la vista correspondiente
+        switch (hash) {
+            case '#reservation-form':
+                console.log('Mostrando formulario de reserva');
+                this.mainView.classList.remove('active');
+                this.reservationView.classList.add('active');
+                this.adminView.classList.remove('active');
+                // Inicializar el formulario si hay datos
+                if (window.reservation) {
+                    window.reservation.mostrarFormulario();
+                }
+                break;
+            case '#admin':
+                console.log('Mostrando panel de administración');
+                this.mainView.classList.remove('active');
+                this.reservationView.classList.remove('active');
+                this.adminView.classList.add('active');
+                // Recargar datos si es necesario
+                if (window.admin) {
+                    window.admin.loadInitialData();
+                }
+                break;
+            default:
+                console.log('Mostrando vista principal');
+                this.mainView.classList.add('active');
+                this.reservationView.classList.remove('active');
+                this.adminView.classList.remove('active');
+                break;
+        }
     }
 }
 
-// Inicializar aplicación cuando el DOM esté listo
+// Inicializar la aplicación cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new App();
 }); 
