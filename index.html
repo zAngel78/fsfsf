@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área de Autocaravanas - Reservas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Área de Autocaravanas</h1>
+            <nav>
+                <button class="nav-btn active" data-view="calendar">Calendario</button>
+                <button class="nav-btn" data-view="reservation">Reservar</button>
+            </nav>
+        </header>
+
+        <main>
+            <!-- Vista del Calendario -->
+            <section id="calendar-view" class="view active">
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button id="prevMonth">&lt;</button>
+                        <h2 id="currentMonth">Julio 2024</h2>
+                        <button id="nextMonth">&gt;</button>
+                    </div>
+                    <div id="calendar" class="calendar-grid"></div>
+                </div>
+                <div class="availability-summary">
+                    <h3>Plazas Disponibles</h3>
+                    <div id="availablePlaces" class="places-grid"></div>
+                </div>
+            </section>
+
+            <!-- Vista del Formulario de Reserva -->
+            <section id="reservation-view" class="view">
+                <form id="reservationForm" class="reservation-form">
+                    <div class="form-group">
+                        <label for="checkIn">Fecha de entrada:</label>
+                        <input type="text" id="checkIn" name="checkIn" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkOut">Fecha de salida:</label>
+                        <input type="text" id="checkOut" name="checkOut" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="place">Plaza:</label>
+                        <select id="place" name="place" required>
+                            <option value="">Selecciona una plaza</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Servicios adicionales:</label>
+                        <div id="services" class="services-grid"></div>
+                    </div>
+
+                    <div class="price-summary">
+                        <h3>Resumen de precios</h3>
+                        <div class="price-details">
+                            <div class="price-row">
+                                <span>Plaza base:</span>
+                                <span id="basePrice">0€</span>
+                            </div>
+                            <div class="price-row">
+                                <span>Servicios:</span>
+                                <span id="servicesPrice">0€</span>
+                            </div>
+                            <div class="price-row total">
+                                <span>Total:</span>
+                                <span id="totalPrice">0€</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Nombre completo:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Teléfono:</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="plate">Matrícula:</label>
+                        <input type="text" id="plate" name="plate" required>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Realizar Reserva</button>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/reservation.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html> 
