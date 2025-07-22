@@ -85,7 +85,7 @@ class Admin {
     showPlazaForm(plaza = null) {
         const isEdit = !!plaza;
         this.formContainer.innerHTML = `
-            <form class="crud-form" onsubmit="window.admin.handlePlazaSubmit(event, ${isEdit})">
+            <form class="crud-form" onsubmit="window.admin.handlePlazaSubmit(event, ${isEdit})" ${plaza ? `data-plaza-id="${plaza.id}"` : ''}>
                 <h3>${isEdit ? 'Editar' : 'Nueva'} Plaza</h3>
                 
                 <div class="form-group">
@@ -153,7 +153,8 @@ class Admin {
 
         try {
             if (isEdit) {
-                await API.actualizarServiciosPlaza(plazaData.id, plazaData.serviciosDisponibles);
+                const plazaId = parseInt(event.target.dataset.plazaId);
+                await API.actualizarServiciosPlaza(plazaId, plazaData.serviciosDisponibles);
             } else {
                 // Aquí iría la llamada para crear plaza si se implementa
                 console.log('Crear plaza:', plazaData);
@@ -232,7 +233,7 @@ class Admin {
     showServicioForm(servicio = null) {
         const isEdit = !!servicio;
         this.formContainer.innerHTML = `
-            <form class="crud-form" onsubmit="window.admin.handleServicioSubmit(event, ${isEdit})">
+            <form class="crud-form" onsubmit="window.admin.handleServicioSubmit(event, ${isEdit})" ${isEdit ? `data-servicio-id="${servicio.id}"` : ''}>
                 <h3>${isEdit ? 'Editar' : 'Nuevo'} Servicio</h3>
                 
                 <div class="form-group">
@@ -293,7 +294,8 @@ class Admin {
 
         try {
             if (isEdit) {
-                await API.updateServicio(servicioData.id, servicioData);
+                const servicioId = parseInt(event.target.dataset.servicioId);
+                await API.updateServicio(servicioId, servicioData);
             } else {
                 await API.createServicio(servicioData);
             }
@@ -310,11 +312,15 @@ class Admin {
         try {
             const response = await API.getServicios();
             let servicio;
+            let categoriaId;
             
             // Buscar el servicio en todas las categorías
             for (const categoria of response.categorias) {
                 servicio = categoria.servicios.find(s => s.id === servicioId);
-                if (servicio) break;
+                if (servicio) {
+                    categoriaId = categoria.id;
+                    break;
+                }
             }
 
             if (!servicio) {
@@ -326,6 +332,36 @@ class Admin {
         } catch (error) {
             console.error('Error al cambiar estado del servicio:', error);
             alert('Error al cambiar el estado');
+        }
+    }
+
+    async editServicio(servicioId) {
+        try {
+            const response = await API.getServicios();
+            let servicio;
+            let categoriaId;
+            
+            // Buscar el servicio y su categoría
+            for (const categoria of response.categorias) {
+                servicio = categoria.servicios.find(s => s.id === servicioId);
+                if (servicio) {
+                    categoriaId = categoria.id;
+                    break;
+                }
+            }
+
+            if (!servicio) {
+                throw new Error('Servicio no encontrado');
+            }
+
+            // Añadir la categoría al objeto servicio
+            servicio.categoriaId = categoriaId;
+            
+            // Mostrar el formulario de edición
+            this.showServicioForm(servicio);
+        } catch (error) {
+            console.error('Error al cargar servicio para editar:', error);
+            alert('Error al cargar los datos del servicio');
         }
     }
 
