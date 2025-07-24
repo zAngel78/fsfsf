@@ -1,5 +1,5 @@
 const CONFIG = {
-    API_URL: 'https://e142b946a07c.ngrok-free.app/api',
+    API_URL: 'https://c6e1ad98e5a2.ngrok-free.app/api',
     PLAZA_BASE_PRICE: 15, // Precio base por día
     DATE_FORMAT: 'Y-m-d',
     SERVICES: {
